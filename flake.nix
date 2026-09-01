@@ -11,6 +11,7 @@
       with ps; [
         pandas
 		matplotlib
+		scikit-learn
       ]);
   in {
     devShells.${system}.default = pkgs.mkShell {
