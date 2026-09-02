@@ -11,17 +11,21 @@ data = data.set_index("date").sort_index()
 font = {'size'   : 20}
 matplotlib.rc('font', **font)
 
-r = data.loc["1998-01-01":"2024-01-01"]
+fit_by_start_year = {}
+for start_date in ["1990", "1980", "1970"]:
+    r = data.loc[start_date:"2024-01-01"]
 
-time = np.arange(len(r)).reshape(-1, 1)
-reg = LinearRegression().fit(
-    time.reshape(-1, 1), r["Annual_Anomaly"].to_numpy()
-)
+    time = (r["Year"] + r["Month"] / 12).to_numpy().reshape(-1, 1)
+    reg = LinearRegression().fit(
+        time, r["Annual_Anomaly"].to_numpy()
+    )
 
-fit = reg.predict(time.reshape(-1, 1))
+    time = (data["Year"] + data["Month"] / 12).to_numpy().reshape(-1, 1)
+    fit_by_start_year[start_date] = reg.predict(time)
 
-plt.plot(r.index, r["Annual_Anomaly"], label="Annual Anomaly")
-plt.plot(r.index, fit, label="Linear fit")
+plt.plot(data.index, data["Annual_Anomaly"], label="Annual Anomaly")
+for start_date, fit in fit_by_start_year.items():
+    plt.plot(data.index, fit, label=f"Linear fit with start for {start_date}-2024")
 plt.xlabel("Year")
 plt.ylabel("Temperature Anomaly (°C)")
 plt.title("Linear trend in temperature")
