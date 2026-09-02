@@ -17,16 +17,26 @@ for start_date in ["1990", "1980", "1970"]:
     r = data.loc[start_date:"2024-01-01"]
 
     time = (r["Year"] + r["Month"] / 12).to_numpy().reshape(-1, 1)
-    reg = LinearRegression().fit(time, r["Annual_Anomaly"].to_numpy())
+    y = r["Annual_Anomaly"].to_numpy()
+    reg = LinearRegression().fit(time, y)
 
-    # time = (data["Year"] + data["Month"] / 12).to_numpy().reshape(-1, 1)
     fit_by_start_year[start_date] = (r.index, reg.predict(time))
 
-    print(f"groth rate for {start_date}-2024 is {reg.coef_[0] * 120:.3f} °C / 10 yrs")
+    slope = reg.coef_[0]
+
+    y_pred = reg.predict(time)
+    residuals = y - y_pred
+
+    n = len(y)
+    sse = np.sum(residuals**2)
+
+    se_slope = np.sqrt((sse / (n - 2)) / np.sum((time.ravel() - time.mean()) ** 2))
+
+    print(f"{slope * 10:.3f} ± {se_slope * 10:.3f} °C / 10 yrs")
 
 
 plt.plot(data.index, data["Annual_Anomaly"], label="Annual Anomaly")
-for start_date, (time ,fit) in reversed(fit_by_start_year.items()):
+for start_date, (time, fit) in reversed(fit_by_start_year.items()):
     plt.plot(time, fit, label=f"Linear fit for {start_date}-2024", linewidth=2)
 plt.xlabel("Year")
 plt.ylabel("Temperature Anomaly (°C)")
