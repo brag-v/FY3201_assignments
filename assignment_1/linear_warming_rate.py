@@ -20,11 +20,11 @@ for start_date in ["1990", "1980", "1970"]:
     y = r["Annual_Anomaly"].to_numpy()
     reg = LinearRegression().fit(time, y)
 
-    fit_by_start_year[start_date] = (r.index, reg.predict(time))
+    y_pred = reg.predict(time)
+    fit_by_start_year[start_date] = (r.index, y_pred)
 
     slope = reg.coef_[0]
 
-    y_pred = reg.predict(time)
     residuals = y - y_pred
 
     n = len(y)
