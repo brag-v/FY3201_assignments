@@ -23,6 +23,9 @@ for start_date in ["1990", "1980", "1970"]:
     time = (data["Year"] + data["Month"] / 12).to_numpy().reshape(-1, 1)
     fit_by_start_year[start_date] = reg.predict(time)
 
+    print(f"groth rate for {start_date}-2024 is {reg.coef_[0] * 120:.3f} °C / 10 yrs")
+
+
 plt.plot(data.index, data["Annual_Anomaly"], label="Annual Anomaly")
 for start_date, fit in fit_by_start_year.items():
     plt.plot(data.index, fit, label=f"Linear fit with start for {start_date}-2024")
