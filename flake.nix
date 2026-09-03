@@ -10,8 +10,9 @@
     python = pkgs.python3.withPackages (ps:
       with ps; [
         pandas
-		matplotlib
-		scikit-learn
+        matplotlib
+        scikit-learn
+        seaborn
       ]);
   in {
     devShells.${system}.default = pkgs.mkShell {
