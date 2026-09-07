@@ -2,7 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-font = {"size": 20}
+font = {"size": 14}
 plt.rc("font", **font)
 
 temperature = (
@@ -55,9 +55,10 @@ joined = (
 print(joined.head())
 
 corr = joined.corr()
-sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=0.5, vmax=1)
 plt.show()
 
+# from https://www.ssb.no/statbank/table/13598
 phd = (
     pd.read_csv(
         "./assignment_1/doktorgrader_norden_baltikum_per_aar.csv", encoding="latin1"
@@ -76,5 +77,5 @@ print(phd.head())
 joined = joined.join(phd, how="inner")
 
 corr = joined.corr()
-sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=0.5, vmax=1)
 plt.show()
