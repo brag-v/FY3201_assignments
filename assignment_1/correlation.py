@@ -1,4 +1,6 @@
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 temperature = (
     pd.read_csv("./assignment_1/air_temperature_sea_ice.csv")[
@@ -26,8 +28,8 @@ print(world_population.head())
 
 # from https://gml.noaa.gov/ccgg/trends/
 co2 = (
-    pd.read_csv("./assignment_1/co2_trend_gl.csv")[["year", "smoothed"]]
-    .rename(columns={"year": "Year", "smoothed": "co2 mole fraction (ppm)"})
+    pd.read_csv("./assignment_1/co2_annmean_mlo.csv")[["year", "mean"]]
+    .rename(columns={"year": "Year", "mean": "co2 mole fraction (ppm)"})
     .groupby("Year")
     .mean()
 )
@@ -35,7 +37,7 @@ print(co2.head())
 
 # from https://gml.noaa.gov/ccgg/trends_ch4/
 ch4 = (
-    pd.read_csv("./assignment_1/ch4_annmean_gl.csv")
+    pd.read_csv("./assignment_1/ch4_annmean_gl.csv")[["year", "mean"]]
     .rename(columns={"year": "Year", "mean": "ch4 mole fraction (ppm)"})
     .set_index("Year")
     .sort_index()
@@ -45,14 +47,9 @@ print(ch4.head())
 joined = (
     temperature.join(world_population, how="inner")
     .join(co2, how="inner")
-    .join(ch4["ch4 mole fraction (ppm)"], how="inner")
+    .join(ch4, how="inner")
 )
 print(joined.head())
-
-
-corr = joined.corr()
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 corr = joined.corr()
 
