@@ -2,6 +2,9 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+font = {"size": 20}
+plt.rc("font", **font)
+
 temperature = (
     pd.read_csv("./assignment_1/air_temperature_sea_ice.csv")[
         ["Year", "Annual_Anomaly"]
@@ -52,7 +55,26 @@ joined = (
 print(joined.head())
 
 corr = joined.corr()
-
 sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+plt.show()
 
+phd = (
+    pd.read_csv(
+        "./assignment_1/doktorgrader_norden_baltikum_per_aar.csv", encoding="latin1"
+    )
+    .rename(
+        columns={
+            "år": "year",
+            "Doktorgradsstudenter per mill. innbyggere Norge": "phd students per million Norway",
+        }
+    )[["year", "phd students per million Norway"]]
+    .set_index("year")
+    .sort_index()
+)
+print(phd.head())
+
+joined = joined.join(phd, how="inner")
+
+corr = joined.corr()
+sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
 plt.show()
