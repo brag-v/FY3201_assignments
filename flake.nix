@@ -13,6 +13,7 @@
         matplotlib
         scikit-learn
         seaborn
+		requests
       ]);
   in {
     devShells.${system}.default = pkgs.mkShell {
